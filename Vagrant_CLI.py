@@ -1,33 +1,51 @@
 import click
 import subprocess
+import search
+@click.group()
+def CLI():
+    pass
 
-@click.command()
-@click.option('--up', '-u', help='Enter your Vagrant machine name to start.')
-@click.option('--down', '-d', help='Enter your Vagrant machine name to halt.')
-def CLI(up, down):
-    """A simple CLI tool to manage Vagrant machines.
-    '-u or --up + <machinename> for starting your machine and -d or --down + <machinename> for stopping your machine.'
-    """
-    if up and down:
-        click.echo("Please enter one of commands not both at the same time!")
-    elif up:
-        # vagrant up
-        is_here = (subprocess.check_output("vagrant status", shell=True, text=True)).split()
-        if up in is_here:
-            subprocess.run(f'vagrant up {up}', shell=True)
-            click.echo(f'machine {up} is going up...')
-        else:
-            click.echo(f'{up} is not defined!')
-    elif down:
-        # vagrant halt
-        is_here = (subprocess.check_output("vagrant status", shell=True, text=True)).split()
-        if down in is_here:
-            subprocess.run(f'vagrant halt {down}', shell=True)
-            click.echo(f'machine {down} is going down...')
-        else:
-            click.echo(f'{down} is not defined!')
+@CLI.command()
+@click.argument('name')
+def init(name):
+    '''Creating a vagrant machine from vagrant cloud'''
+    subprocess.run(f'vagrant init {name}', shell=True)
+
+@CLI.command()
+@click.argument('name')
+def up(name):
+    '''Running the vagrant machine'''
+    if search.search(name) == True:
+        subprocess.run(f'vagrant up {name}', shell=True)
     else:
-        click.echo("Please enter one options -u or -d + <machinename>.")
+        click.echo('There is no machine named: {name}!')
+
+@CLI.command()
+@click.argument('name')
+def halt(name):
+    '''Stopping the vagrant machine'''
+    if search.search(name) == True:
+        subprocess.run(f'vagrant halt {name}', shell=True)
+    else:
+        click.echo(f'There is no machine named: {name}!')
+
+@CLI.command()
+@click.argument('name')
+def suspend(name):
+    '''Suspending the vagrant machine'''
+    if search.search(name) == True:
+        subprocess.run(f'vagrant suspend {name}', shell=True)
+    else:
+        click.echo('There is no machine named: {name}!')
+
+@CLI.command()
+@click.argument('name')
+def resume(name):
+    '''Resuming the vagrant machine'''
+    if search.search(name) == True:
+        subprocess.run(f'vagrant halt {name}', shell=True)
+    else:
+        click.echo('There is no machine named: {name}!')
 
 if __name__ == '__main__':
     CLI()
