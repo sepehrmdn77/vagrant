@@ -9,7 +9,7 @@ Vagrant.configure("2") do |config|
       vb.memory = "512"
     end
     slave_1.vm.network "private_network", ip: "192.168.56.11"
-    slave_1.vm.hostname = "slav_1"
+    slave_1.vm.hostname = "slav1"
     slave_1.vm.provision "shell", path: "provisioners/slave_provisioners.sh"
   end
   #slave_2
@@ -20,7 +20,7 @@ Vagrant.configure("2") do |config|
       vb.memory = "512"
     end
     slave_2.vm.network "private_network", ip: "192.168.56.12"
-    slave_2.vm.hostname = "slave_2"
+    slave_2.vm.hostname = "slave2"
     slave_2.vm.provision "shell", path: "provisioners/slave_provisioners.sh"
   end
   #server
